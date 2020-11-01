@@ -1,0 +1,39 @@
+body {
+	width: 1200px;
+	height: 1200px;
+	background-color: rgba(0,0,0,0.5);
+}
+#main {
+	width: 800px;
+	height: 800px;
+	margin: 0 auto;
+	background-color: rgba(255,255,255,0.5);
+}
+#main#content {
+	margin: 0 auto;
+	background-color: rgba(255,255,255,0.5);
+}
+#navigation {
+	margin: 0 auto;
+	padding-top: 5px;
+}
+li {
+	display: inline;
+	margin-right: 15px;
+}
+.nav1, .nav2, .nav3 {
+	margin-right: 50px;
+}
+#main#content#estimateForm {
+	width: 200px;
+	margin: 0 auto;
+}
+#content {
+	margin: 0 auto;
+}
+.lorem1 {
+	width:250px;
+}
+.image, .lorem1 {
+	display: inline;
+}
