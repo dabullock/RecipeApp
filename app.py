@@ -6,7 +6,7 @@
 from flask import Flask
 from flask import render_template, url_for, request, redirect
 #import pymongo
-from user import *
+#from user import *
 
 app = Flask(__name__)
 
@@ -17,13 +17,7 @@ def hello_world():
 @app.route('/about')
 def about():
 	return render_template('./about.html')
-
-@app.route('/test', methods = ['GET', 'POST'])
-def test():
-	user = '1234'
-	if request.method == 'GET':
-
-		return render_template('./index.html', user=user)
+	
 @app.route('/estimate', methods = ['GET', 'POST'])
 def estimate():
 	user = '1234'

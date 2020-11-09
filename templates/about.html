@@ -2,29 +2,30 @@
 <html>
 	<head>
 		<title>Vertical Tank Maintenance</title>
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
-		<div id="main" class="test">
-			<nav id="navigation">
-				<ul>
-					<li id="nav1"><a href="/">Home</a></li>
-					<li id="nav2"><a href="/about">About</a></li>
-					<li id="nav3"><a href="/estimate">Estimate</a></li>
+		<div id="main" class="container p-3 my-3 bg-dark text-white">
+			<nav id="navigation" class="navbar navbar-expand-lg navbar-light bg-light">
+				<ul class="navbar-nav mr-auto">
+					<li id="nav1" class="nav-item"><a href="/" class="nav-link">Home</a></li>
+					<li id="nav2" class="nav-item"><a href="/about" class="nav-link">About</a></li>
+					<li id="nav3" class="nav-item"><a href="/estimate" class="nav-link">Estimate</a></li>
 				</ul>
 			</nav>
-			<div id="content">
-				<h2>About Vertical Tank Maintenance</h2>
-		        <div class="lorem1">
-		        	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque consectetur eleifend urna at aliquet. Vestibulum ut commodo sem. Phasellus sollicitudin neque felis, a maximus orci pharetra a. Aenean massa massa, interdum a sapien vel, scelerisque tincidunt leo. Proin dignissim efficitur ligula, sit amet pellentesque purus sagittis vel. Praesent interdum tellus in tincidunt congue. Nullam ut porttitor metus. In in lorem sit amet tortor pulvinar euismod. Duis vestibulum scelerisque luctus. Fusce vel laoreet est, non ullamcorper neque. Vestibulum rhoncus justo sed accumsan interdum. Morbi tristique diam id risus dictum, a pharetra lectus rutrum.</p>
-		        	<br>
-		        	<p>Etiam lacinia consectetur massa, vel hendrerit erat malesuada eget. Ut rutrum, urna ut congue tincidunt, metus nisl fermentum orci, ut volutpat ante purus at libero. Nam cursus a ipsum vel suscipit. Duis sodales porta quam, vitae elementum est. In felis sem, pulvinar sed lectus eu, varius tristique tellus. Curabitur luctus sapien arcu. Maecenas rhoncus, purus ac maximus sollicitudin, ligula diam placerat orci, a suscipit nulla neque eget ante. Ut dictum congue sollicitudin. Praesent dui quam, pellentesque nec pulvinar ac, pharetra eget odio. Donec non egestas augue, at vestibulum est.</p>
-		        	<br>
-		        	<p>Morbi at urna pretium, gravida eros in, consectetur nulla. In hac habitasse platea dictumst. Nunc vitae odio sed quam lacinia suscipit ac eget augue. Ut non sem dui. Etiam elit nisi, vestibulum id tincidunt in, elementum a purus. Nullam dapibus nisi in eros suscipit, et cursus leo porta. Pellentesque vitae nisi volutpat turpis maximus consequat a ut neque.</p>
-		        </div>
-				
+			<div class="row">
+				<div id="content" class="col-lg">
+					<h2>About Vertical Tank Maintenance</h2>
+			        <div class="lorem1">
+			        	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque consectetur eleifend urna at aliquet. Vestibulum ut commodo sem. Phasellus sollicitudin neque felis, a maximus orci pharetra a. Aenean massa massa, interdum a sapien vel, scelerisque tincidunt leo. Proin dignissim efficitur ligula, sit amet pellentesque purus sagittis vel. Praesent interdum tellus in tincidunt congue. Nullam ut porttitor metus. In in lorem sit amet tortor pulvinar euismod. Duis vestibulum scelerisque luctus. Fusce vel laoreet est, non ullamcorper neque. Vestibulum rhoncus justo sed accumsan interdum. Morbi tristique diam id risus dictum, a pharetra lectus rutrum.</p>
+			        	<br>
+			        	<p>Etiam lacinia consectetur massa, vel hendrerit erat malesuada eget. Ut rutrum, urna ut congue tincidunt, metus nisl fermentum orci, ut volutpat ante purus at libero. Nam cursus a ipsum vel suscipit. Duis sodales porta quam, vitae elementum est. In felis sem, pulvinar sed lectus eu, varius tristique tellus. Curabitur luctus sapien arcu. Maecenas rhoncus, purus ac maximus sollicitudin, ligula diam placerat orci, a suscipit nulla neque eget ante. Ut dictum congue sollicitudin. Praesent dui quam, pellentesque nec pulvinar ac, pharetra eget odio. Donec non egestas augue, at vestibulum est.</p>
+			        	<br>
+			        	<p>Morbi at urna pretium, gravida eros in, consectetur nulla. In hac habitasse platea dictumst. Nunc vitae odio sed quam lacinia suscipit ac eget augue. Ut non sem dui. Etiam elit nisi, vestibulum id tincidunt in, elementum a purus. Nullam dapibus nisi in eros suscipit, et cursus leo porta. Pellentesque vitae nisi volutpat turpis maximus consequat a ut neque.</p>
+			        </div>				
+				</div>		
 			</div>
+			<footer id="footer">&copy; VTM 2020</footer>
 		</div>
-		<footer id="footer">&copy; VTM 2020</footer>
 	</body>
 </html>
