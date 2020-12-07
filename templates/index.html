@@ -1,32 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>Vertical Tank Maintenance</title>
-		
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	</head>
-	<body>
-		<div id="main" class="container p-3 my-3 bg-dark text-white">
-			<nav id="navigation" class="navbar navbar-expand-lg navbar-light bg-light">
-				<ul class="navbar-nav mr-auto">
-					<li id="nav1" class="nav-item"><a href="/" class="nav-link">Home</a></li>
-					<li id="nav2" class="nav-item"><a href="/about" class="nav-link">About</a></li>
-					<li id="nav3" class="nav-item"><a href="/estimate" class="nav-link">Estimate</a></li>
-				</ul>
-			</nav>
-			<div class="row">
-				<div id="content" class="col-lg">
-					<h2>Vertical Tank Maintenance</h2>
-					<div class="image">
-			            <img src="{{ url_for('static', filename='img/tanks.jpg') }}" alt="Vertical tank field img", height=300 width=350 />
-			        </div>
-			        <div class="lorem1">
-			        	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque consectetur eleifend urna at aliquet. Vestibulum ut commodo sem. Phasellus sollicitudin neque felis, a maximus orci pharetra a. Aenean massa massa, interdum a sapien vel, scelerisque tincidunt leo. Proin dignissim efficitur ligula, sit amet pellentesque purus sagittis vel. Praesent interdum tellus in tincidunt congue. Nullam ut porttitor metus. In in lorem sit amet tortor pulvinar euismod. Duis vestibulum scelerisque luctus. Fusce vel laoreet est, non ullamcorper neque. Vestibulum rhoncus justo sed accumsan interdum. Morbi tristique diam id risus dictum, a pharetra lectus rutrum.</p>
-			        </div>
-					
-				</div>
-			</div>
-			<footer id="footer">&copy; VTM 2020</footer>
-		</div>
-	</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %} My Recipes {% endblock %}
+
+
+{% block body %} 
+
+<h1>Home Page</h1>
+
+<hr>
+<p>My recipes home page</p>
+<a href= "{{ url_for('admin_users') }}">All Users</a>
+<br><br>
+<a href= "{{ url_for('recipe_manager') }}">Manage Recipes</a>
+<br><br>
+<a href= "{{ url_for('login') }}">Login</a>
+<br><br>
+
+{% endblock %}

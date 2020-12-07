@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %} My Recipes Administration {% endblock %}
+
+
+{% block body %} 
+
+<h1>Recipe Management</h1>
+<hr>
+<h3>All Recipes</h3>
+  <hr>
+
+  <br>
+  {% if all_users %}
+    <table>
+        <thead>
+            <tr>
+                <th>Recipe</th>
+                <th>Category</th>
+                <th>Ingredients</th>
+                <th>Preparation</th>
+                <th>Contributor</th>
+                <th>Date Added</th>
+                <th>Date Modified</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for row in all_users %}
+            <tr>
+                
+                <td> {{ row['recipe_name'] }}</td>
+                <td> {{ row['category'] }}</td>
+                <td> {{ row['ingredients'] }}</td>
+                <td> {{ row['preparation'] }}</td>
+                <td>{{ row['first_name'] }}</td>
+                <td> {{ row['date_added'] }}</td>
+                <td> {{ row['date_modified'] }}</td>
+            
+                <td><form action="{{ url_for('delete_recipe', recipe_id=row['_id']) }}" method="POST">
+                    <input type="submit" value="Delete"  />
+                </form>    </td>
+
+                <td><form action="{{ url_for('edit_recipe', recipe_id=row['_id']) }}" method="POST">
+                    <input type="submit" value="Details"  />
+                </form>    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}
