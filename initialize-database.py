@@ -75,6 +75,8 @@ def initial_database():
     #main = add_category('Main dishes')
     #drink = add_category('Drinks')
     #desserts = add_category('Desserts')
+    apps = add_category('Appetizer')
+    s = add_category('Sides')
 
    
     # add recipe
