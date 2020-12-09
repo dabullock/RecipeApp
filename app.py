@@ -79,6 +79,7 @@ def roles_required(*role_names):
             print(role_names)
             if not current_user.role in role_names:
                 print('The user does not have this role.')
+                flash('Account access not permitted here', category='warning')
                 return redirect(url_for('login'))
             else:
                 print('The user is in this role.')
@@ -170,11 +171,6 @@ def update_myaccount(user_id):
 def admin_users():
     return render_template('users.html', all_roles=roles.find(), all_users=users.find())
 
-@app.route('/recipes/manage', methods=['GET', 'POST'])
-@login_required
-@roles_required('admin', 'contributor')
-def recipe_manager():
-    return render_template('recipes.html', all_roles=roles.find(), all_users=recipes.find())
 
 @app.route('/admin/add-user', methods=['GET', 'POST'])
 @login_required
@@ -215,18 +211,6 @@ def admin_delete_user(user_id):
     flash('User not found.', 'warning')
     return redirect(url_for('admin_users'))
 
-@app.route('/recipes/delete-recipe/<recipe_id>', methods=['GET', 'POST'])
-@login_required
-@roles_required('admin', 'contributor')
-def delete_recipe(recipe_id):
-    delete_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
-    if delete_recipe:
-        recipes.delete_one(delete_recipe)
-        flash(delete_recipe['recipe_name'] + ' has been deleted.', 'warning')
-        return redirect(url_for('recipe_manager'))
-    flash('Recipe not found.', 'warning')
-    return redirect(url_for('recipe_manager'))
-
 @app.route('/admin/edit-user/<user_id>', methods=['GET', 'POST'])
 @login_required
 @roles_required('admin')
@@ -236,16 +220,6 @@ def admin_edit_user(user_id):
         return render_template('edit-user.html', user=edit_user, all_roles=roles.find())
     flash('User not found.', 'warning')
     return redirect(url_for('admin_users'))
-
-@app.route('/recipes/edit-recipe/<recipe_id>', methods=['GET', 'POST'])
-@login_required
-@roles_required('admin', 'contributor')
-def edit_recipe(recipe_id):
-    edit_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
-    if edit_recipe:
-        return render_template('edit-recipe.html', recipe=edit_recipe, all_roles=roles.find(),all_categories=categories.find(), user_email=session['_user_id'])
-    flash('Recipe not found.', 'warning')
-    return redirect(url_for('recipe_manager'))
 
 @app.route('/admin/update-user/<user_id>', methods=['GET', 'POST'])
 @login_required
@@ -271,6 +245,97 @@ def admin_update_user(user_id):
         return redirect(url_for('admin_users'))
     return render_template('users.html', all_roles=roles.find(), all_users=users.find())
 
+##########  Recipes ##########
+
+# VIEW ALL RECIPES LIST
+@app.route('/recipes/all', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'contributor', 'user')
+def fetch_all_recipes():
+    return render_template('all-recipes.html', all_users=recipes.find())
+
+# VIEW INDIVIDUAL RECIPE DETAILS
+@app.route('/recipes/view-recipe/<recipe_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'contributor', 'user')
+def view_recipe(recipe_id):
+    view_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
+    if view_recipe:
+        return render_template('view-recipe.html', recipe=view_recipe, all_roles=roles.find(), all_categories=categories.find(), user_email=session['_user_id'])
+    flash('Recipe not found.', 'warning')
+    return redirect(url_for('fetch_all_recipes'))
+
+# VIEW ALL RECIPES w/ admin features
+@app.route('/recipes/manage', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'contributor')
+def recipe_manager():
+    return render_template('recipes.html', all_roles=roles.find(), all_users=recipes.find())
+
+# GIVE NEW RECIPE FORM
+@app.route('/recipes/new-recipe', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'contributor')
+def new_recipe():
+    if request.method == 'GET':
+        return render_template('new-recipe.html', firstName=current_user.first_name, lastName=current_user.last_name, all_categories=categories.find())
+    if request.method == 'POST':
+        return 'This should add a recipe'
+    #view_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
+    #if view_recipe:
+       # return render_template('view-recipe.html', firstName=current_user.first_name, lastName=current_user.last_name, all_categories=categories.find())
+    #flash('Recipe not found.', 'warning')
+    #return redirect(url_for('fetch_all_recipes'))
+
+@app.route('/recipes/add-recipe', methods=['POST'])
+@login_required
+@roles_required('admin', 'contributor')
+def add_recipe():
+    if request.method == 'POST':
+        form = request.form
+        recipe_data = {
+            'recipe_name': form['recipe_name'],
+            'category': form['category'],
+            'ingredients': form['ingredients'],
+            'preparation': form['preparation'],
+            'notes': form['notes'],
+            'first_name': form['author_first'],
+            'last_name': form['author_last'],
+            'date_added': datetime.datetime.now(),
+            'date_modified': datetime.datetime.now()
+        }
+        recipes.insert_one(recipe_data)
+        flash('Saved New Recipe: {}'.format(form['recipe_name']), 'success')
+        return redirect(url_for('recipe_manager'))
+    else:
+        return render_template('new-recipe.html', firstName=current_user.first_name, lastName=current_user.last_name, all_categories=categories.find())
+
+
+# DELETE RECIPE
+@app.route('/recipes/delete-recipe/<recipe_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'contributor')
+def delete_recipe(recipe_id):
+    delete_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
+    if delete_recipe:
+        recipes.delete_one(delete_recipe)
+        flash(delete_recipe['recipe_name'] + ' has been deleted.', 'warning')
+        return redirect(url_for('recipe_manager'))
+    flash('Recipe not found.', 'warning')
+    return redirect(url_for('recipe_manager'))
+
+# LOAD EDIT TEMPLATE
+@app.route('/recipes/edit-recipe/<recipe_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'contributor')
+def edit_recipe(recipe_id):
+    edit_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
+    if edit_recipe:
+        return render_template('edit-recipe.html', recipe=edit_recipe, all_roles=roles.find(),all_categories=categories.find(), user_email=session['_user_id'])
+    flash('Recipe not found.', 'warning')
+    return redirect(url_for('recipe_manager'))
+
+# UPDATE RECIPE
 @app.route('/recipes/update-recipe/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 @roles_required('admin', 'contributor')
@@ -301,20 +366,6 @@ def update_recipe(recipe_id):
             return redirect(url_for('edit_recipe', recipe_id=recipe_id))
     return render_template('recipes.html', all_roles=roles.find(), all_users=recipes.find())
 
-
-##########  Recipes ##########
-
-@app.route('/recipes/new-recipe', methods=['GET'])
-@login_required
-@roles_required('admin', 'contributor')
-def new_recipe():
-    return 'Retrieve new recipe page.'
-
-@app.route('/recipes/add-recipe', methods=['POST'])
-@login_required
-@roles_required('admin', 'contributor')
-def add_recipe():
-    return 'Add new recipe to database.'
 
 @app.route('/recipes/search', methods=['POST'])
 @login_required

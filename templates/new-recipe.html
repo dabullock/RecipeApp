@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %} New Recipe {% endblock %}
+
+
+{% block body %} 
+
+<h3>Create New Recipe</h3>
+  <hr>
+  {% if firstName %}
+  <form method="POST" id="newForm" action="{{ url_for('add_recipe') }}">
+
+        <p> <label  for="recipe_name"> Recipe Name: </label>    
+        <input type="text" id="recipe_name" name="recipe_name" required autofocus></p>
+        <label for="role">Category :</label>
+        <select name="category" readonly>
+        {% for category in all_categories %}
+           <option value="{{ category['category_name'] }}">{{ category['category_name'] }}</option>    
+           {% endfor %}
+          </select>
+        </p>
+
+        <p> <label> Ingredients: </label>    
+        <br>
+        <textarea name="ingredients" form="newForm"></textarea></p>
+    
+        <p> <label  for="preparation"> Preparation: </label>    
+        <input type="text" id="preparation" name="preparation" required></p>
+    
+        <p> <label  for="notes"> Notes: </label>    
+        <input type="text" id="notes" name="notes" required></p>
+        <p> 
+          <input type="hidden" id="author_first" name="author_first" required value="{{ firstName }}">
+          <input type="hidden" id="author_last" name="author_last" required value="{{ lastName }}">
+        <p> <label  for="date_added"> Contributor: </label>    
+            <input type="text" id="contributor" name="contributor" required value="{{ firstName + ' '+ lastName }}" readonly></p>
+    <input type="submit" value="Save"></p>
+
+  </form>
+  
+{% endif %}
+
+{% endblock %}

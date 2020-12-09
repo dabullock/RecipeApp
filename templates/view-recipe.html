@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %} User Edit {% endblock %}
+
+
+{% block body %} 
+
+<h3>Recipe for {{recipe['recipe_name']}}</h3>
+  <hr>
+  {% if recipe %}
+  <form method="POST" id="editForm" action="{{ url_for('fetch_all_recipes') }}">
+
+        <p> <label  for="recipe_name"> Recipe Name: </label>    
+        <input type="text" id="recipe_name" name="recipe_name" required autofocus value="{{ recipe['recipe_name'] }}" readonly></p>
+        <label for="role">Category :</label>
+        <select name="category" readonly>
+        {% for category in all_categories %}
+           <option value="{{ category['category_name'] }}"{% if category['category_name'] == recipe['category'] %} SELECTED {% endif %}{% if category['category_name'] != recipe['category'] %} DISABLED {% endif %}>{{ category['category_name'] }}</option>    
+           {% endfor %}
+          </select>
+        </p>
+
+        <p> <label> Ingredients: </label>    
+        <!--<input type="text" id="ingredients" name="ingredients" required value="{{ recipe['ingredients'] }}"></p>-->
+        <br>
+        <textarea name="ingredients" form="editForm" readonly>{{ recipe['ingredients'] }}</textarea></p>
+    
+        <p> <label  for="preparation"> Preparation: </label>    
+        <input type="text" id="preparation" name="preparation" required value="{{ recipe['preparation'] }}" readonly></p>
+    
+        <p> <label  for="notes"> Notes: </label>    
+        <input type="text" id="notes" name="notes" required value="{{ recipe['notes'] }}" readonly></p>
+        <p> 
+          <input type="hidden" id="author_first" name="author_first" required value="{{ recipe['first_name'] }}">
+          <input type="hidden" id="author_last" name="author_last" required value="{{ recipe['last_name'] }}">
+        <p> <label  for="date_added"> Contributor: </label>    
+            <input type="text" id="contributor" name="contributor" required value="{{ recipe['first_name'] + ' '+ recipe['last_name'] }}" readonly></p>
+        <p> <label  for="date_added"> Date Added: </label>    
+            <input type="text" id="date_added" name="date_added" required value="{{ recipe['date_added'] }}" readonly></p>
+            <p> <label  for="date_modified"> Date Modifed: </label>    
+                <input type="text" id="date_modified" name="date_modified" required value="{{ recipe['date_modified'] }}" readonly></p>
+
+        <p>  
+    <input type="submit" value="Back"></p>
+
+  </form>
+  
+{% endif %}
+
+{% endblock %}
