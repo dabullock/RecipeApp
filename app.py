@@ -18,7 +18,6 @@ load_dotenv(dotenv_path)
 
 mongo = os.getenv('MONGO')
 client = pymongo.MongoClient(mongo)
-
 db = client['schoolServer'] # Mongo collection
 users = db['users'] # Mongo document
 roles = db['roles'] # Mongo document
@@ -105,7 +104,7 @@ def login():
         print(request.form['username'])
         user = users.find_one({"email": request.form['username']})
         print(user)
-        if user and bcrypt.checkpw(request.form['password'].encode(),user['password']):#user['password'] == request.form['password']:
+        if user and bcrypt.checkpw(request.form['password'].encode(),user['password'].encode()):#user['password'] == request.form['password']:
             user_obj = User(username=user['email'], role=user['role'], id=user['_id'], first_name=user['first_name'], last_name=user['last_name'])
             login_user(user_obj)
             next_page = request.args.get('next')
@@ -148,8 +147,8 @@ def update_myaccount(user_id):
         if password != form['confirm_password']:
             flash('Passwords must match', 'warning')
             return redirect(url_for('my_account', user_id=user_id))
-        if update_account['password'] != password:
-            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        if '$2b' not in password:
+            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
         users.update({'_id': ObjectId(user_id)},
             {
@@ -186,7 +185,7 @@ def admin_add_user():
         if password != form['confirm_password']:
             flash('Passwords must match', 'warning')
             return redirect(url_for('admin_users'))
-        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         
         email = users.find_one({"email": request.form['email']})
         if email:
@@ -240,8 +239,8 @@ def admin_update_user(user_id):
         if password != form['confirm_password']:
             flash('Passwords must match', 'warning')
             return redirect(url_for('admin_edit_user', user_id=user_id))
-        if update_user['password'] != password:
-            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        if '$2b' not in password:
+            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
         users.update({'_id': ObjectId(user_id)},
             {
