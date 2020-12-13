@@ -16,8 +16,7 @@ APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to applicati
 dotenv_path = os.path.join(APP_ROOT, '.env')
 load_dotenv(dotenv_path)
 
-mongo = 'mongodb+srv://daniel:Z47c6cI1SfOvWElZ@schoolserver.coq5b.mongodb.net/schoolServer?retryWrites=true&w=majority'#os.getenv('MONGO')
-print(mongo)
+mongo = os.getenv('MONGO')
 client = pymongo.MongoClient(mongo)
 
 db = client['schoolServer'] # Mongo collection
@@ -106,7 +105,7 @@ def login():
         print(request.form['username'])
         user = users.find_one({"email": request.form['username']})
         print(user)
-        if user and user['password'] == request.form['password']:
+        if user and bcrypt.checkpw(request.form['password'].encode(),user['password'].encode()):#user['password'] == request.form['password']:
             user_obj = User(username=user['email'], role=user['role'], id=user['_id'], first_name=user['first_name'], last_name=user['last_name'])
             login_user(user_obj)
             next_page = request.args.get('next')
@@ -146,13 +145,16 @@ def update_myaccount(user_id):
         form = request.form
 
         password = request.form['password']
-
+        if password != form['confirm_password']:
+            flash('Passwords must match', 'warning')
+            return redirect(url_for('my_account', user_id=user_id))
+        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         users.update({'_id': ObjectId(user_id)},
             {
             'first_name': form['first_name'],
             'last_name': form['last_name'],
             'email': form['email'],
-            'password': password,
+            'password': str(password),
             'role': form['role'],
             'date_added': form['date_added'],
             'date_modified': datetime.datetime.now()
@@ -180,6 +182,10 @@ def admin_add_user():
         form = request.form
         
         password = request.form['password']
+        if password != form['confirm_password']:
+            flash('Passwords must match', 'warning')
+            return redirect(url_for('admin_users'))
+        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         
         email = users.find_one({"email": request.form['email']})
         if email:
@@ -189,7 +195,7 @@ def admin_add_user():
             'first_name': form['first_name'],
             'last_name': form['last_name'],
             'email': form['email'],
-            'password': password,
+            'password': str(password),
             'role': form['role'],
             'date_added': datetime.datetime.now(),
             'date_modified': datetime.datetime.now()
@@ -229,13 +235,17 @@ def admin_update_user(user_id):
         form = request.form
 
         password = request.form['password']
+        if password != form['confirm_password']:
+            flash('Passwords must match', 'warning')
+            return redirect(url_for('admin_edit_user', user_id=user_id))
+        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
         users.update({'_id': ObjectId(user_id)},
             {
             'first_name': form['first_name'],
             'last_name': form['last_name'],
             'email': form['email'],
-            'password': password,
+            'password': str(password),
             'role': form['role'],
             'date_added': form['date_added'],
             'date_modified': datetime.datetime.now()

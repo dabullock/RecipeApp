@@ -7,16 +7,16 @@ from dotenv import load_dotenv
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
 dotenv_path = os.path.join(APP_ROOT, '.env')
 load_dotenv(dotenv_path)
-mongo = 'mongodb+srv://daniel:Z47c6cI1SfOvWElZ@schoolserver.coq5b.mongodb.net/schoolServer?retryWrites=true&w=majority'#o.s.getenv('MONGO')
+mongo = 'mongodb+srv://daniel:Z47c6cI1SfOvWElZ@schoolserver.coq5b.mongodb.net/myProject?retryWrites=true&w=majority'#o.s.getenv('MONGO')
 print(mongo)
 client = pymongo.MongoClient(mongo)
 
-db = client['schoolServer']
+db = client['myProject']
 
 users = db['users']
 roles = db['roles']
-recipes = db['recipes']
-categories = db['categories']
+#recipes = db['recipes']
+#categories = db['categories']
 
 
 def add_role(role_name):
@@ -63,20 +63,20 @@ def add_recipe(recipe_name, category, ingredients, preparation, notes, first_nam
 
 def initial_database():
     # add roles
-    #admin = add_role('admin')
+    admin = add_role('admin')
     #print(str(admin))
     #contributor = add_role('contributor')
-    #user = add_role('user')
+    user = add_role('user')
 
     # add users
-    mike = add_user('Mike', 'Colbert', 'mike@gmail.com', 'password100', 'contributor')
+    mike = add_user('Daniel', 'Bullock', 'd.bullock@dabullock.com', 'password100', 'admin')
 
     # add categories
     #main = add_category('Main dishes')
     #drink = add_category('Drinks')
     #desserts = add_category('Desserts')
-    apps = add_category('Appetizer')
-    s = add_category('Sides')
+    #apps = add_category('Appetizer')
+    #s = add_category('Sides')
 
    
     # add recipe
