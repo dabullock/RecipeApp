@@ -105,7 +105,7 @@ def login():
         print(request.form['username'])
         user = users.find_one({"email": request.form['username']})
         print(user)
-        if user and bcrypt.checkpw(request.form['password'].encode(),user['password']):#user['password'] == request.form['password']:
+        if user and bcrypt.checkpw(request.form['password'].encode(),user['password'].encode()):#user['password'] == request.form['password']:
             user_obj = User(username=user['email'], role=user['role'], id=user['_id'], first_name=user['first_name'], last_name=user['last_name'])
             login_user(user_obj)
             next_page = request.args.get('next')
