@@ -105,7 +105,7 @@ def login():
         print(request.form['username'])
         user = users.find_one({"email": request.form['username']})
         print(user)
-        if user and bcrypt.checkpw(request.form['password'].encode(),user['password'].encode()):#user['password'] == request.form['password']:
+        if user and bcrypt.checkpw(request.form['password'].encode(),user['password']):#user['password'] == request.form['password']:
             user_obj = User(username=user['email'], role=user['role'], id=user['_id'], first_name=user['first_name'], last_name=user['last_name'])
             login_user(user_obj)
             next_page = request.args.get('next')
@@ -132,6 +132,7 @@ def logout():
 @roles_required('user', 'contributor', 'admin')
 def my_account(user_id):
     edit_account = users.find_one({'_id': ObjectId(user_id)})
+    decrypt = 
     if edit_account:
         return render_template('my-account.html', user=edit_account)
     flash('User not found.', 'warning')
@@ -143,23 +144,24 @@ def my_account(user_id):
 def update_myaccount(user_id):
     if request.method == 'POST':
         form = request.form
-
+        update_account = users.find_one({'_id': ObjectId(user_id)})
         password = request.form['password']
         if password != form['confirm_password']:
             flash('Passwords must match', 'warning')
             return redirect(url_for('my_account', user_id=user_id))
-        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        if update_account['password'] != password:
+            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
         users.update({'_id': ObjectId(user_id)},
             {
             'first_name': form['first_name'],
             'last_name': form['last_name'],
             'email': form['email'],
-            'password': str(password),
+            'password': password,
             'role': form['role'],
             'date_added': form['date_added'],
             'date_modified': datetime.datetime.now()
             })
-        update_account = users.find_one({'_id': ObjectId(user_id)})
         flash(update_account['email'] + ' has been modified.', 'success')
         return redirect(url_for('index'))
     return redirect(url_for('index'))
@@ -195,7 +197,7 @@ def admin_add_user():
             'first_name': form['first_name'],
             'last_name': form['last_name'],
             'email': form['email'],
-            'password': str(password),
+            'password': password,
             'role': form['role'],
             'date_added': datetime.datetime.now(),
             'date_modified': datetime.datetime.now()
@@ -232,25 +234,27 @@ def admin_edit_user(user_id):
 @roles_required('admin')
 def admin_update_user(user_id):
     if request.method == 'POST':
+        update_user = users.find_one({'_id': ObjectId(user_id)})
         form = request.form
-
         password = request.form['password']
+
         if password != form['confirm_password']:
             flash('Passwords must match', 'warning')
             return redirect(url_for('admin_edit_user', user_id=user_id))
-        password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+            
+        if update_user['password'] != password:
+            password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
         users.update({'_id': ObjectId(user_id)},
             {
             'first_name': form['first_name'],
             'last_name': form['last_name'],
             'email': form['email'],
-            'password': str(password),
+            'password': password,
             'role': form['role'],
             'date_added': form['date_added'],
             'date_modified': datetime.datetime.now()
             })
-        update_user = users.find_one({'_id': ObjectId(user_id)})
         flash(update_user['email'] + ' has been added.', 'success')
         return redirect(url_for('admin_users'))
     return render_template('users.html', all_roles=roles.find(), all_users=users.find())
