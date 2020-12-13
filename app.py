@@ -132,7 +132,6 @@ def logout():
 @roles_required('user', 'contributor', 'admin')
 def my_account(user_id):
     edit_account = users.find_one({'_id': ObjectId(user_id)})
-    decrypt = 
     if edit_account:
         return render_template('my-account.html', user=edit_account)
     flash('User not found.', 'warning')
@@ -241,7 +240,6 @@ def admin_update_user(user_id):
         if password != form['confirm_password']:
             flash('Passwords must match', 'warning')
             return redirect(url_for('admin_edit_user', user_id=user_id))
-            
         if update_user['password'] != password:
             password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
